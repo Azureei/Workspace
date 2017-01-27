@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+{% load staticfiles %} 
+
+<html>
+	<head>
+		<title>About</title>
+	</head>
+	
+	<body>
+		<h1>Initializing test</h1>
+		<div>
+			Test going on ...<br />
+			Rango says here is the about page. <br/> <a href='/rango/'>Index</a>
+		<strong>{{ somemessage }}</strong><br />
+		</div>
+		
+		<div>
+			<img src="{{ MEDIA_URL}}cat.jpg">.
+		</div>
+		
+		<div>
+			<a href="/rango/about/">About</a><br />
+			<img src="{% static "images/wallpaper.png" %}"
+			alt="Awesome" /> <!-- New line -->
+		</div>
+		
+	</body>
+	
+</html>
