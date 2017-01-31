@@ -23,11 +23,3 @@ class Page(models.Model):
 
 	def __unicode__(self): # For Python 2, use __unicode__ too
 		return self.title
-
-class PageAdmin(admin.ModelAdmin):
-	category = models.ForeignKey(Category)
-	title = models.CharField(max_length=128)
-	url = models.URLField()
-	
-	def __unicode__(self): # For Python 2, use __unicode__ too
-		return self.title, self.category, self.url
