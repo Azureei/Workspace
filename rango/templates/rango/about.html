@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-
+{% extends 'rango/base.html' %}
 {% load staticfiles %} 
+{% block title_block %}
+About
+{% endblock %}	
 
-<html>
-	<head>
-		<title>About</title>
-	</head>
-	
-	<body>
-		<h1>Initializing test</h1>
-		<div>
-			Test going on ...<br />
-			rango says here is the about page <br/> <a href='/rango/'>Index</a>
+{% block body_block %}
+		rango says here is the about page <br/> <a href='/rango/'>Index</a>
 		<strong>{{ somemessage }}</strong><br />
 		</div>
 		
@@ -22,9 +16,6 @@
 		<div>
 			<a href="/rango/about/">About</a><br />
 			<img src="{% static "images/wallpaper.png" %}"
-			alt="Awesome" /> <!-- New line -->
+			alt="Awesome" /> 
 		</div>
-		
-	</body>
-	
-</html>
+{% endblock%}
