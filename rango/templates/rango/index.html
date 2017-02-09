@@ -8,7 +8,11 @@ Index
         <h1>Rango says...</h1>
         
         <div>
-            hey there partner!
+            {% if user.is_authenticated %}
+				howdy {{user.username}}!
+			{% else %}
+				hey there partner!
+			{% endif %}
         </div>
         
 		<h1>Most liked categories </h1>
@@ -16,9 +20,8 @@ Index
         {% if categories %}
         <ul>
             {% for category in categories %}
-            <!-- Following line changed to add an HTML hyperlink -->
             <li>
-            <a href="/rango/category/{{ category.slug }}">{{ category.name }}</a>
+            <a href="{% url 'show_category' category.slug %}">{{ category.name }}</a>
             </li>
             {% endfor %}
         </ul>
@@ -41,6 +44,27 @@ Index
     {% else %}
         <strong>There are no pages present.</strong>
     {% endif %}
+	
+	<ul>
+	
+	{% if user.is_authenticated %}
+		
+		<li><a href="{% url 'restricted' %}"> Restricted Page</a></li>
+		<li><a href="{% url 'logout' %}">Logout</a></li>
+		<li><a href="{% url 'add_category'%}">Add a New Category</a></li>
+		
+	{% else %}
+		
+		<li><a href="{% url 'login'%}">Sign In</a><li>
+		<li><a href="{% url 'register'%}">Sign Up</a><li>
+		
+	{% endif %}
+		
+		
+		<li><a href="{% url 'about'%}">About</a></li>
+		<li><a href="{% url 'index'%}">Index</a><li>
+	</ul>
+	
     </div>
 	<img src="{% static "images/wallpaper.png" %}" alt="Nice picture" /> 
 {% endblock %}    

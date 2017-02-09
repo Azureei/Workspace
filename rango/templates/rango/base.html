@@ -13,14 +13,15 @@
 	<body>
 		<div>
 			{% block body_block %}
-			s{% endblock%}
+			{% endblock%}
 		</div>
 		<hr />
 		<div>
 			<ul>
-				<li><a href="{% url 'add_category' %}"> Add New Category </a> </li>
-				<li><a href="/rango/about/"> About</a></li>
+				<li><a href="{% url 'about' %}"> About</a></li>
 				<li><a href="{% url 'index' %}"> Index</a></li>
+				<li><a href="{% url 'register' %}">Sign Up</a></li>
+				<li><a href="{% url 'login' %}">Login</a></li>
 			</ul>
 		</div>
 	</body>
