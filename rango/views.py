@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from rango.webhose_search import run_query
 
 #Chapter 3
 #def index(request):
@@ -127,7 +128,15 @@ def add_page(request, category_name_slug):
     context_dict = {'form':form, 'category': category}
 
     return render(request, 'rango/add_page.html', context_dict)
-	
+
+def search(request):
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+             # Run our Webhose function to get the results list!
+             result_list = run_query(query)
+    return render(request, 'rango/search.html', {'result_list': result_list})	
 
 def register(request):
     registered = False
@@ -241,3 +250,4 @@ def get_server_side_cookie(request, cookie, default_val=None):
     if not val:
         val = default_val
     return val
+
