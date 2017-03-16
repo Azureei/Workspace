@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
@@ -61,7 +61,7 @@ def show_category(request, category_name_slug):
         
         # Retrieve all of the associated pages.
         # Note that filter() will return a list of page objects or an empty list
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         
         # Adds our results list to the template context under name pages.
         context_dict['pages'] = pages
@@ -75,6 +75,20 @@ def show_category(request, category_name_slug):
         # the template will display the "no category" message for us.
         context_dict['category'] = None
         context_dict['pages'] = None
+
+        # create a default query based on the category name
+        # to be shown in the search box
+        context_dict['query'] = category.name
+
+        result_list = []
+        if request.method == 'POST':
+            query = request.POST['query'].strip()
+            if query:
+                # Run our Webhose function to get the results list!
+                result_list = run_query(query)
+                context_dict['query'] = query
+                context_dict['result_list'] = result_list
+
     
     # Go render the response and return it to the client.
     return render(request, 'rango/category.html', context_dict)
@@ -103,6 +117,20 @@ def add_category(request):
     # Will handle the bad form, new form or no form supplied cases
     # just print them to the terminal
     return render(request, 'rango/add_category.html', {'form':form})
+
+@login_required
+def like_category(request):
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+        likes = 0
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        if cat:
+            likes = cat.likes + 1
+            cat.likes =  likes
+            cat.save()
+    return HttpResponse(likes)
 
 
 def add_page(request, category_name_slug):
@@ -168,6 +196,22 @@ def register(request):
                    'profile_form': profile_form,
                    'registered': registered
                   })
+
+def track_url(request):
+    page_id = None
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+    if page_id:
+        try:
+            page = Page.objects.get(id=page_id)
+            page.views = page.views + 1
+            page.save()
+            return redirect(page.url)
+        except:
+            return HttpResponse("Page id {0} not found".format(page_id))
+    print("No page_id in get string")
+    return redirect(reverse('index'))
 
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
